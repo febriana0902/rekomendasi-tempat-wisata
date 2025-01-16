@@ -41,16 +41,16 @@ fetch('data.json') // Ganti dengan path ke file JSON Anda
             const selectedCategory = categorySelect.value;
             const budget = parseInt(budgetInput.value.replace(/\D/g, ''), 10); // Mengambil input budget dan menghapus karakter non-digit
 
-            if (isNaN(budget) || budget <= 0) {
-                alert('Please enter a valid budget.');
-                return;
-            }
+            // if (isNaN(budget) || budget <= 0) {
+            //     alert('Please enter a valid budget.');
+            //     return;
+            // }
 
             // Filter data berdasarkan kota, kategori dan budget
             const filteredData = data.filter(item => {
-                const isCityMatch = selectedCity ? item.City === selectedCity : true;
-                const isCategoryMatch = selectedCategory ? item.Category === selectedCategory : true;
-                const isBudgetMatch = item.Price <= budget; // Memeriksa apakah harga kurang dari atau sama dengan budget
+                const isCityMatch = selectedCity ? item.City === selectedCity : true; 
+                const isCategoryMatch = selectedCategory ? item.Category === selectedCategory : true; 
+                const isBudgetMatch = !isNaN(budget) && budget > 0 ? item.Price <= budget : true; 
                 return isCityMatch && isCategoryMatch && isBudgetMatch;
             });
 
@@ -93,7 +93,7 @@ fetch('data.json') // Ganti dengan path ke file JSON Anda
                 });
             });
 
-            // Menampilkan data rekomendasi berdasarkan kesamaan dan rating
+            // Menampilkan data rekomendasi berdasarkan rating
             sortedData.forEach(item => {
                 // Cek apakah nama tempat sudah ditampilkan
                 if (!displayedPlaces.has(item.Place_Name)) {
@@ -116,10 +116,11 @@ fetch('data.json') // Ganti dengan path ke file JSON Anda
                     listRecom.appendChild(card);
                 }
             });
-
+            
             if (displayedPlaces.size === 0) {
                 listRecom.innerHTML = '<p>No recommendations available within your budget.</p>';
             }
+            
         });
     })
     .catch(error => console.error('Error membaca JSON:', error));
